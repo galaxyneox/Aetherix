@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aetherix Obfuscator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .code-container {
+            font-family: 'Courier New', Courier, monospace;
+            tab-size: 4;
+        }
+        .highlight {
+            background-color: rgba(255, 255, 0, 0.2);
+            border-left: 3px solid yellow;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                Aetherix Obfuscator
+            </h1>
+            <p class="text-gray-400">Advanced local obfuscation tool with multiple protection layers</p>
+            <div class="mt-4 flex justify-center gap-2">
+                <span class="bg-yellow-500/20 text-yellow-400 text-xs px-2 py-1 rounded-full">V4.0</span>
+                <span class="bg-red-500/20 text-red-400 text-xs px-2 py-1 rounded-full">ULTRA SECURE</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-xl font-semibold">Original Code</h2>
+                    <div class="flex gap-2">
+                        <button id="clear-btn" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">
+                            Clear
+                        </button>
+                        <button id="sample-btn" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">
+                            Sample Code
+                        </button>
+                    </div>
+                </div>
+                <textarea id="input-code" class="w-full h-96 bg-gray-700 text-gray-200 p-4 rounded code-container" spellcheck="false" placeholder="Paste your Roblox Lua script here..."></textarea>
+                <div class="text-xs text-gray-500 mt-2">Lines: <span id="line-count">0</span> | Size: <span id="size-count">0</span> bytes</div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-xl font-semibold">Obfuscated Code</h2>
+                    <div class="flex gap-2">
+                        <button id="minify-btn" class="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded text-sm">
+                            Minify
+                        </button>
+                        <button id="copy-btn" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">
+                            Copy Code
+                        </button>
+                        <button id="download-btn" class="bg-gray-600 hover:bg-gray-700 px-3 py-1 rounded text-sm">
+                            Download
+                        </button>
+                    </div>
+                </div>
+                <pre id="output-code" class="w-full h-96 bg-gray-700 text-gray-200 p-4 rounded overflow-auto code-container" spellcheck="false" placeholder="Obfuscated result will appear here..."></pre>
+                <div class="text-xs text-gray-400 mt-2 grid grid-cols-3 gap-2">
+                    <div>Obfuscation: <span id="obf-level" class="font-bold">None</span></div>
+                    <div>Size: <span id="output-size" class="font-bold">0</span> bytes</div>
+                    <div>Entropy: <span id="entropy" class="font-bold">0%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg p-6 mb-6 shadow-lg border border-gray-700">
+            <h2 class="text-xl font-semibold mb-4">Advanced Obfuscation Settings</h2>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="flex flex-col">
+                    <label class="mb-2 text-sm">Variable Obfuscation</label>
+                    <select id="var-obfuscation" class="bg-gray-700 text-white rounded px-3 py-2">
+                        <option value="random">Random Names</option>
+                        <option value="hex">Hex Encoded</option>
+                        <option value="unicode">Unicode Characters</option>
+                        <option value="control">Control Characters</option>
+                    </select>
+                </div>
+                <div class="flex flex-col">
+                    <label class="mb-2 text-sm">String Encoding</label>
+                    <select id="string-encoding" class="bg-gray-700 text-white rounded px-3 py-2">
+                        <option value="base64">Base64</option>
+                        <option value="hex">Hex</option>
+                        <option value="xor">XOR</option>
+                        <option value="aes">AES Encrypted</option>
+                    </select>
+                </div>
+                <div class="flex flex-col">
+                    <label class="mb-2 text-sm">Code Protection</label>
+                    <select id="code-protection" class="bg-gray-700 text-white rounded px-3 py-2">
+                        <option value="none">None</option>
+                        <option value="basic">Basic</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="maximum" selected>Maximum</option>
+                    </select>
+                </div>
+                <div class="flex flex-col">
+                    <label class="mb-2 text-sm">Flow Control</label>
+                    <select id="flow-control" class="bg-gray-700 text-white rounded px-3 py-2">
+                        <option value="none">None</option>
+                        <option value="basic">Basic</option>
+                        <option value="advanced" selected>Advanced</option>
+                    </select>
+                </div>
+                <div class="flex items-start">
+                    <div class="flex flex-col">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="anti-tamper" class="mr-2" checked>
+                            <label for="anti-tamper">Anti-Tamper</label>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <input type="checkbox" id="runtime-checks" class="mr-2" checked>
+                            <label for="runtime-checks">Runtime Checks</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button id="obfuscate-btn" class="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-all transform hover:scale-105 group">
+                <span id="obf-btn-text">Obfuscate Code</span>
+                <div id="obf-progress" class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent to-yellow-400 opacity-0 group-hover:opacity-25 transition-opacity"></div>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputCode = document.getElementById('input-code');
+            const outputCode = document.getElementById('output-code');
+            const obfuscateBtn = document.getElementById('obfuscate-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const sampleBtn = document.getElementById('sample-btn');
+            const lineCount = document.getElementById('line-count');
+            const sizeCount = document.getElementById('size-count');
+
+            inputCode.addEventListener('input', function() {
+                const lines = inputCode.value.split('\n').length;
+                const size = new Blob([inputCode.value]).size;
+                lineCount.textContent = lines;
+                sizeCount.textContent = size;
+            });
+
+            sampleBtn.addEventListener('click', function() {
+                inputCode.value = `-- Contoh Script Roblox sederhana
+local function hitungDamage(pemain, senjata)
+    local level = pemain:GetAttribute("Level") or 1
+    local baseDamage = senjata.Damage
+    local multiplier = 1 + (level * 0.05)
+    
+    local finalDamage = baseDamage * multiplier
+    
+    -- Berikan efek visual
+    local part = Instance.new("Part")
+    part.Position = pemain.Character.HumanoidRootPart.Position
+    part.Size = Vector3.new(2, 2, 2)
+    part.BrickColor = BrickColor.new("Bright red")
+    part.Parent = workspace
+    
+    game:GetService("Debris"):AddItem(part, 0.5)
+    
+    return finalDamage
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+        
+        humanoid.Died:Connect(function()
+            print(player.Name .. " telah mati!")
+        end)
+    end)
+end)`;
+            });
+
+            obfuscateBtn.addEventListener('click', function() {
+                const code = inputCode.value.trim();
+                if (!code) {
+                    alert('Masukkan kode Lua terlebih dahulu!');
+                    return;
+                }
+                
+                const varObfMethod = document.getElementById('var-obfuscation').value;
+                const stringEncMethod = document.getElementById('string-encoding').value;
+                const antiTamper = document.getElementById('anti-tamper').checked;
+                
+                // Mulai obfuscate
+                try {
+                    const obfuscated = obfuscateLua(code, {
+                        varObfMethod,
+                        stringEncMethod,
+                        antiTamper
+                    });
+                    outputCode.textContent = obfuscated;
+                    document.getElementById('obf-level').textContent = 'Enabled';
+                } catch (error) {
+                    alert('Error during obfuscation: ' + error.message);
+                }
+            });
+
+            copyBtn.addEventListener('click', function() {
+                const code = outputCode.textContent;
+                if (!code.trim()) {
+                    alert('Tidak ada kode yang bisa disalin!');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(code)
+                    .then(() => alert('Kode berhasil disalin ke clipboard!'))
+                    .catch(err => alert('Gagal menyalin kode: ' + err));
+            });
+
+            downloadBtn.addEventListener('click', function() {
+                const code = outputCode.textContent;
+                if (!code.trim()) {
+                    alert('Tidak ada kode untuk diunduh!');
+                    return;
+                }
+                
+                const blob = new Blob([code], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'obfuscated_script.lua';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            function obfuscateLua(code, options) {
+                // Simpan komentar asli
+                const comments = code.match(/--.*$/gm) || [];
+                
+                // Obfuscasi variabel lokal
+                if (options.varObfMethod === 'random') {
+                    const localVars = extractLocalVars(code);
+                    const varMap = createVarMap(localVars, 'random');
+                    code = replaceVars(code, localVars, varMap);
+                } else if (options.varObfMethod === 'hex') {
+                    const localVars = extractLocalVars(code);
+                    const varMap = createVarMap(localVars, 'hex');
+                    code = replaceVars(code, localVars, varMap);
+                } else if (options.varObfMethod === 'unicode') {
+                    const localVars = extractLocalVars(code);
+                    const varMap = createVarMap(localVars, 'unicode');
+                    code = replaceVars(code, localVars, varMap);
+                } else if (options.varObfMethod === 'control') {
+                    const localVars = extractLocalVars(code);
+                    const varMap = createVarMap(localVars, 'control');
+                    code = replaceVars(code, localVars, varMap);
+                }
+                
+                // Obfuscasi string
+                if (options.stringEncMethod === 'base64') {
+                    code = encodeStrings(code, 'base64');
+                } else if (options.stringEncMethod === 'hex') {
+                    code = encodeStrings(code, 'hex');
+                } else if (options.stringEncMethod === 'xor') {
+                    code = encodeStrings(code, 'xor');
+                } else if (options.stringEncMethod === 'aes') {
+                    code = encodeStrings(code, 'aes');
+                }
+                
+                // Tambahkan anti-tamper
+                if (options.antiTamper) {
+                    code = addAntiTamper(code);
+                }
+                
+                // Gabungkan dengan komentar
+                comments.forEach(comment => {
+                    code = code.replace(/(?:\r\n|\r|\n)/, `\n${comment}\n`);
+                });
+                
+                return `-- Obfuscated with Custom Roblox Obfuscator
+-- Variable Obfuscation: ${options.varObfMethod}
+-- String Encoding: ${options.stringEncMethod}
+-- Anti-Tamper: ${options.antiTamper ? 'Enabled' : 'Disabled'}\n\n${code}`;
+            }
+            
+            function extractLocalVars(code) {
+                const varPattern = /\blocal\s+([a-zA-Z_][a-zA-Z0-9_]*)/g;
+                const vars = new Set();
+                let match;
+                
+                while ((match = varPattern.exec(code)) !== null) {
+                    vars.add(match[1]);
+                }
+                
+                return Array.from(vars);
+            }
+            
+            function createVarMap(vars, method) {
+                const map = {};
+                const usedNames = new Set();
+                
+                vars.forEach(varName => {
+                    let newName;
+                    
+                    if (method === 'random') {
+                        do {
+                            newName = 'v' + Math.random().toString(36).substr(2, 8);
+                        } while (usedNames.has(newName));
+                    } else if (method === 'hex') {
+                        newName = '_0x' + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+                    } else if (method === 'unicode') {
+                        newName = '\\u{' + (0x2000 + Math.floor(Math.random() * 0x500)).toString(16) + '}';
+                    } else if (method === 'control') {
+                        newName = String.fromCharCode(0x2000 + Math.floor(Math.random() * 0x500));
+                    }
+                    
+                    usedNames.add(newName);
+                    map[varName] = newName;
+                });
+                
+                return map;
+            }
+            
+            function replaceVars(code, vars, varMap) {
+                vars.forEach(varName => {
+                    const regex = new RegExp(`\\b${varName}\\b`, 'g');
+                    code = code.replace(regex, varMap[varName]);
+                });
+                return code;
+            }
+            
+            function encodeStrings(code, method) {
+                const stringPattern = /(['"])(?:(?=(\\?))\2.)*?\1/g;
+                
+                return code.replace(stringPattern, match => {
+                    const strContent = match.substring(1, match.length - 1);
+                    let encoded;
+                    
+                    if (method === 'base64') {
+                        encoded = btoa(unescape(encodeURIComponent(strContent)));
+                        return `(function() local x='${encoded}' return loadstring('return \\''..x..'\\'')().decode end)()`;
+                    } else if (method === 'hex') {
+                        encoded = Array.from(strContent).map(c => 
+                            c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+                        return `(function() local x='${encoded}' return x:gsub('..', function(cc) return string.char(tonumber(cc, 16)) end) end)()`;
+                    } else if (method === 'xor') {
+                        const key = Math.floor(Math.random() * 255);
+                        encoded = Array.from(strContent).map(c => 
+                            (c.charCodeAt(0) ^ key).toString(16).padStart(2, '0')).join('');
+                        return `(function() local x='${encoded}' local k=${key} return x:gsub('..', function(cc) return string.char(tonumber(cc, 16) ~ k) end) end)()`;
+                    } else if (method === 'aes') {
+                        // Implement AES encryption here (placeholder)
+                        return `(function() local x='${strContent}' return "AES_ENCRYPTED_"..x end)()`;
+                    }
+                    
+                    return match;
+                });
+            }
+            
+            function addAntiTamper(code) {
+                const antiTamperCode = `
+-- Anti-Tamper Protection
+local function checkIntegrity()
+    local scriptHash = "${Math.random().toString(36).substr(2, 16)}"
+    local currentHash = game:GetService("HttpService"):GenerateGUID(false)
+    
+    if scriptHash ~= currentHash then
+        game:GetService("Players").LocalPlayer:Kick("Script Tampering Detected")
+    end
+end
+
+spawn(checkIntegrity)
+`;
+                return antiTamperCode + code;
+            }
+        });
+    </script>
+</body>
+</html>
