@@ -280,7 +280,7 @@ end)`;
                     code = code.replace(/(?:\r\n|\r|\n)/, `\n${comment}\n`);
                 });
                 
-                return `-- Obfuscated with Custom Roblox Obfuscator
+                return `-- Obfuscated with Aetherix Obfuscator
 -- Variable Obfuscation: ${options.varObfMethod}
 -- String Encoding: ${options.stringEncMethod}
 -- Anti-Tamper: ${options.antiTamper ? 'Enabled' : 'Disabled'}\n\n${code}`;
